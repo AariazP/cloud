@@ -31,5 +31,10 @@ sudo mount $PARTITION $MOUNT_POINT
 echo "Detalles de la nueva partición:"
 sudo lsblk -f | grep $DISK
 
+echo "Configurando permisos"
+sudo chmod 777 /mnt/external_disk
+
 echo "Proceso completado."
+
+lsblk
 
