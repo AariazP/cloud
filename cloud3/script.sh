@@ -4,10 +4,13 @@
 VBOX="/c/Program Files/Oracle/VirtualBox/VBoxManage.exe"
 
 #Variables
-
+entrada=$(cat | tr -d '\n' | tr -s ' ')
+echo $entrada
 #Nombre el disco y ruta
-VM_NAME=$1
-DISK_PATH=$2
+VM_NAME=$(echo "$entrada"|awk -F "NAME: " '{print $2}' | awk -F " PATH: " '{print $1}')
+echo " El nombre de la maquina virtual $VM_NAME"
+DISK_PATH=$(echo "$entrada"|awk -F "PATH: " '{print $2}')
+echo " La ruta del disco $DISK_PATH"
 CONTROLLER="SATA"
 PORT=1
 DEVICE=0
@@ -42,7 +45,7 @@ else
 	exit 1
 fi
 
-sleep 35
+sleep 40
 
 # Ejecuta guestproperty enumerate para obtener la IP
 INFO=$("$VBOX" guestproperty enumerate "$VM_NAME" | grep "V4/IP")

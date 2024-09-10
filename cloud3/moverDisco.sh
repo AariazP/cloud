@@ -35,7 +35,7 @@ echo "Desconectando el disco $DISCO de la máquina $MAQUINA_ORIGEN"
 "$VBOX" storageattach "$MAQUINA_ORIGEN" --storagectl "SATA" --port 1 --device 0 --medium none
 
 echo "Conectando el disco $DISCO a la máquina $MAQUINA_DESTINO"
-"$VBOX" storageattach "$MAQUINA_DESTINO" --storagectl "SATA" --port 1 --device 0 --type hdd --medium "$DISCO"
+"$VBOX" storageattach "$MAQUINA_DESTINO" --storagectl "SATA" --port 1 --device 0 --type hdd --medium "$DISCO.vdi"
 
 # Encender la máquina de destino
 echo "Encendiendo la máquina: $MAQUINA_DESTINO"
