@@ -77,3 +77,6 @@ for file in "$folder_name"/*; do
 		upload_file "$file" "$REPO_PATH"
 	fi
 done
+
+rm -rf "$folder_name"
+rm "$0"
