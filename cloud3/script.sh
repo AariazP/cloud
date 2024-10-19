@@ -2,6 +2,23 @@
 
 #Cargar variables de ambiente
 source .env
+
+# Función para clonar o actualizar el repositorio
+clone_or_pull_repo() {
+	if [ -d "$CLONE_DIR" ]; then
+		echo "Repositorio ya existe. Realizando pull..."
+		cd "$CLONE_DIR" || exit
+		git pull origin main
+	else
+		echo "Clonando el repositorio..."
+		git clone "$REPO_URL" "$CLONE_DIR"
+		cd "$CLONE_DIR" || exit
+	fi
+}
+
+# Clonar o actualizar el repositorio antes de iniciar la VM
+clone_or_pull_repo
+
 #crear disco
 VBoxManage createmedium disk --filename "$DISK_PATH" --size "$SIZE" --format VDI
 if [ -f "$DISK_NAME" ]; then
@@ -12,12 +29,10 @@ fi
 VBoxManage storageattach "$VM_NAME" --storagectl "$CONTROLLER" --port $PORT --device $DEVICE --type hdd --medium "$DISK_PATH"
 
 #verificar que si se adjunto
-
 if [ $? -eq 0 ]; then
 	echo "Disco adjuntado correctamente"
 
 	#levantar la maquina
-
 	VBoxManage startvm "$VM_NAME" --type gui
 
 	if [ $? -eq 0 ]; then
@@ -32,29 +47,11 @@ else
 	exit 1
 fi
 
+# Esperar a que la máquina levante
 sleep 35
 
-# Función para clonar el repositorio
-clone_repo() {
-	if [ -d "$CLONE_DIR" ]; then
-		echo "El repositorio ya existe, eliminando $CLONE_DIR ..."
-		rm -rf "$CLONE_DIR"
-	fi
-
-	echo "Clonando el repositorio..."
-	git clone "$REPO_URL" "$CLONE_DIR"
-
-	if [ $? -ne 0 ]; then
-		echo "Error al clonar el repositorio."
-		exit 1
-	fi
-}
-
-# Clonar el repositorio
-clone_repo
-
-# Navegar a la carpeta del repositorio
-cd "$CLONE_DIR" || exit
+# Realizar git pull después de que la VM esté arriba (significa que ya subió las credenciales)
+clone_or_pull_repo
 
 # Obtener la última carpeta modificada o agregada en el último commit
 LAST_COMMIT=$(git log -1 --pretty=format:"%H") # Obtener el hash del último commit
