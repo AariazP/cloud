@@ -12,27 +12,43 @@ echo "Disco seleccionado: $DISK"
 
 # Formatear el disco
 echo "Formateando el disco $DISK con GPT..."
-sudo parted $DISK mklabel gpt --script
+parted $DISK mklabel gpt --script
 
 # Crear una partición que ocupe todo el espacio
 echo "Creando partición primaria en $DISK..."
-sudo parted $DISK mkpart primary ext4 0% 100% --script
+parted $DISK mkpart primary ext4 0% 100% --script
+
+# Esperar a que la partición se cree
+sleep 1 # Puedes ajustar el tiempo según sea necesario
 
 # Formatear la partición como ext4
-echo "Formateando la partición $PARTITION como ext4..."
-sudo mkfs.ext4 $PARTITION
+if [ -e "$PARTITION" ]; then
+	echo "Formateando la partición $PARTITION como ext4..."
+	mkfs.ext4 $PARTITION
+else
+	echo "La partición $PARTITION no existe."
+	exit 1
+fi
 
 # Montar el disco (opcional)
 echo "Montando la partición en $MOUNT_POINT..."
 mkdir -p $MOUNT_POINT
-sudo mount $PARTITION $MOUNT_POINT
+mount $PARTITION $MOUNT_POINT
+
+# Verificar si el montaje fue exitoso
+if mountpoint -q $MOUNT_POINT; then
+	echo "Montaje exitoso en $MOUNT_POINT."
+else
+	echo "Error al montar la partición. Verifica el tipo de sistema de archivos."
+	exit 1
+fi
 
 # Mostrar detalles del disco
 echo "Detalles de la nueva partición:"
-sudo lsblk -f | grep $DISK
+lsblk -f | grep $DISK
 
 echo "Configurando permisos"
-sudo chmod 777 /mnt/external_disk
+chmod 777 $MOUNT_POINT
 
 echo "Proceso completado."
 
