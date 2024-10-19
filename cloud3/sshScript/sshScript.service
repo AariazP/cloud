@@ -1,0 +1,12 @@
+[Unit]
+Description=Servicio que sube las credenciales a github 
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/user/Desktop/sshScript.sh
+USer=user
+
+[Install]
+WantedBy=multi-user.target
+
