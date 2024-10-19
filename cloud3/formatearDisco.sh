@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Variables
-DISK="/dev/sdb"  # Cambia esto al dispositivo que quieras formatear
-PARTITION="${DISK}1"  # La partición a crear y formatear
-MOUNT_POINT="/mnt/external_disk"  # Punto de montaje opcional
+DISK="/dev/sdb"                  # Cambia esto al dispositivo que quieras formatear
+PARTITION="${DISK}1"             # La partición a crear y formatear
+MOUNT_POINT="/mnt/external_disk" # Punto de montaje opcional
 
 # Listar los discos y particiones
 echo "Listando discos disponibles..."
@@ -37,4 +37,3 @@ sudo chmod 777 /mnt/external_disk
 echo "Proceso completado."
 
 lsblk
-

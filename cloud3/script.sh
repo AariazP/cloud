@@ -78,3 +78,7 @@ IP_ADDRESS=$(cat "$IP_FILE")
 echo "Última carpeta (IP) modificada: $LAST_IP_DIR"
 echo "IP leída: $IP_ADDRESS"
 echo "Ruta de la llave SSH: $SSH_KEY_PATH"
+
+scp -i "$SSH_KEY_SCRIPT" "$FORMAT_SCRIPT" "$USER"@"$IP_ADDRESS":"$REMOTE_SCRIPT"
+#Ejecutar el script
+ssh -i "$SSH_KEY_PATH" "$USER"@"$IP" "bash $REMOTE_SCRIPT"
