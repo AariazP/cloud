@@ -34,10 +34,6 @@ fi
 
 sleep 35
 
-# Variables iniciales
-REPO_URL="git@github.com:usuario/SSH-VM.git" # Cambia esto por tu URL del repo
-CLONE_DIR="/ruta/especifica/SSH-VM"          # Cambia esto por la ruta donde quieres clonar el repo
-
 # Función para clonar el repositorio
 clone_repo() {
 	if [ -d "$CLONE_DIR" ]; then
