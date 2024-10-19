@@ -13,7 +13,7 @@ chmod 600 ~/.ssh/authorized_keys
 
 # 3. Obtener la IP de la máquina
 ip_address=$(hostname -I | awk '{print $1}')
-
+echo "$ip_address" >~/ip_address.txt
 # 4. Crear una carpeta cuyo nombre sea la dirección IP de la máquina
 folder_name=~/ssh_info_$ip_address
 mkdir -p "$folder_name"
