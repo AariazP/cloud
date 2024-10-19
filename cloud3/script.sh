@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Cargar variables de ambiente
 source .env
 
@@ -79,6 +77,11 @@ echo "Última carpeta (IP) modificada: $LAST_IP_DIR"
 echo "IP leída: $IP_ADDRESS"
 echo "Ruta de la llave SSH: $SSH_KEY_PATH"
 
-scp -i "$SSH_KEY_SCRIPT" "$FORMAT_SCRIPT" "$USER"@"$IP_ADDRESS":"$REMOTE_SCRIPT"
-#Ejecutar el script
-ssh -i "$SSH_KEY_PATH" "$USER"@"$IP" "bash $REMOTE_SCRIPT"
+# cambiar permisos a la llave SSH
+chmod 600 "$SSH_KEY_PATH"
+
+# Transferir el script sin interacción para 'known_hosts'
+scp -i "$SSH_KEY_PATH" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$FORMAT_SCRIPT" "$USER@$IP_ADDRESS:$REMOTE_PATH"
+
+# Ejecutar el script remoto sin interacción para 'known_hosts'
+ssh -i "$SSH_KEY_PATH" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$USER@$IP_ADDRESS" "bash $REMOTE_SCRIPT"
