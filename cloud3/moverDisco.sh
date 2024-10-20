@@ -1,14 +1,7 @@
 #!/bin/bash
 
-# Verificar que se hayan pasado los tres parámetros
-if [ "$#" -ne 3 ]; then
-	echo "Se necesitan: $0 <nombre_disco> <nombre_maquina_origen> <nombre_maquina_destino>"
-	exit 1
-fi
-
-DISCO="$1"
-MAQUINA_ORIGEN="$2"
-MAQUINA_DESTINO="$3"
+#Load environment variables
+source .env
 
 # Función para apagar la máquina si está encendida
 apagar_maquina() {
@@ -29,11 +22,11 @@ apagar_maquina "$MAQUINA_ORIGEN"
 apagar_maquina "$MAQUINA_DESTINO"
 
 # Mover el disco de una máquina a otra
-echo "Desconectando el disco $DISCO de la máquina $MAQUINA_ORIGEN"
-VBoxManage storageattach "$MAQUINA_ORIGEN" --storagectl "SATA" --port 1 --device 0 --medium none
+echo "Desconectando el disco $DISK_PATH de la máquina $MAQUINA_ORIGEN"
+VBoxManage storageattach "$MAQUINA_ORIGEN" --storagectl $CONTROLLER --port 1 --device 0 --medium none
 
 echo "Conectando el disco $DISCO a la máquina $MAQUINA_DESTINO"
-VBoxManage storageattach "$MAQUINA_DESTINO" --storagectl "SATA" --port 1 --device 0 --type hdd --medium "$DISCO"
+VBoxManage storageattach "$MAQUINA_DESTINO" --storagectl $CONTROLLER --port 1 --device 0 --type hdd --medium "$DISK_PATH"
 
 # Encender la máquina de destino
 echo "Encendiendo la máquina: $MAQUINA_DESTINO"

@@ -16,11 +16,18 @@ clone_or_pull_repo() {
 
 # Clonar o actualizar el repositorio antes de iniciar la VM
 clone_or_pull_repo
-
-# Crear disco
-VBoxManage createmedium disk --filename "$DISK_PATH" --size "$SIZE" --format VDI
-if [ -f "$DISK_NAME" ]; then
-	echo "Se ha creado el disco $NAME en la ruta $DISK_PATH"
+# Verificar si el disco ya existe
+if [ -f "$DISK_PATH" ]; then
+	echo "El disco $DISK_PATH ya existe. No se creará uno nuevo."
+else
+	# Crear disco
+	VBoxManage createmedium disk --filename "$DISK_PATH" --size "$SIZE" --format VDI
+	if [ -f "$DISK_PATH" ]; then
+		echo "Se ha creado el disco en la ruta $DISK_PATH"
+	else
+		echo "Error al crear el disco en $DISK_PATH"
+		exit 1
+	fi
 fi
 
 # Adjuntar el disco duro virtual

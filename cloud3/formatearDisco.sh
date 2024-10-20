@@ -4,6 +4,7 @@
 DISK="/dev/sdb"                  # Cambia esto al dispositivo que quieras formatear
 PARTITION="${DISK}1"             # La partición a crear y formatear
 MOUNT_POINT="/mnt/external_disk" # Punto de montaje opcional
+USER="user"                      # Usuario que tendrá acceso al disco
 
 # Listar los discos y particiones
 echo "Listando discos disponibles..."
@@ -48,7 +49,10 @@ echo "Detalles de la nueva partición:"
 lsblk -f | grep $DISK
 
 echo "Configurando permisos"
-chmod 777 $MOUNT_POINT
+chmod 700 $MOUNT_POINT
+
+echo "Configurando propietario"
+chown -R $USER:$USER $MOUNT_POINT
 
 echo "Proceso completado."
 
