@@ -6,9 +6,19 @@ VBoxManage='/usr/local/bin/VBoxManage'
 
 source .env
 # Variables
-NAME="$NEW_VM$RANDOM"
+BASE_NAME="node_"
+COUNTER=1
+
+# Encontrar el siguiente nombre disponible
+while $VBoxManage list vms | grep -q "\"${BASE_NAME}${COUNTER}\""; do
+	COUNTER=$((COUNTER + 1))
+done
+
+NAME="${BASE_NAME}${COUNTER}"
+echo $NAME >ultima_maquina.txt
+
 # Crear la nueva máquina virtual
-echo "Creando la máquina virtual '$NEW_VM'..."
+echo "Creando la máquina virtual '$NAME'..."
 $VBoxManage createvm --name "$NAME" --register
 
 # Configurar red en modo Bridge
@@ -21,7 +31,7 @@ $VBoxManage modifyvm "$NAME" --macaddress1 auto
 
 # Configurar la máquina virtual
 echo "Configurando la máquina virtual '$NAME'..."
-$VBoxManage modifyvm "$NAME" --memory 2048 --vram 128 --acpi on --nic1 bridged
+$VBoxManage modifyvm "$NAME" --memory 512 --vram 128 --acpi on --nic1 bridged
 $VBoxManage modifyvm "$NAME" --ostype "Ubuntu_64" --cpu-profile "host"
 $VBoxManage modifyvm "$NAME" --graphicscontroller VMSVGA --firmware efi --boot1 floppy --boot2 dvd
 
